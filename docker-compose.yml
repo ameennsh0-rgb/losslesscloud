@@ -1,0 +1,16 @@
+# HTTPS via Caddy (automatic certs). Replace addon.example.com with your domain.
+services:
+  addon:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    volumes: ["addon-data:/data"]
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports: ["80:80", "443:443"]
+    command: caddy reverse-proxy --from addon.example.com --to addon:8787
+    volumes: ["caddy-data:/data"]
+volumes:
+  addon-data:
+  caddy-data:
